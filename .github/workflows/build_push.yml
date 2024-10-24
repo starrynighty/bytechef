@@ -9,7 +9,7 @@ name: CI Build on PUSH
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "test" ]
 
 permissions:
   contents: read

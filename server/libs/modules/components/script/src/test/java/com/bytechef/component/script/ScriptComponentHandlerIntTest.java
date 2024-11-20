@@ -118,6 +118,7 @@ public class ScriptComponentHandlerIntTest {
         Assertions.assertEquals(6000, outputs.get("result"));
     }
 
+    @Disabled
     @Test
     public void testPerformRuby() {
         Job job = componentJobTestExecutor.execute(

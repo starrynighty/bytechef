@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
@@ -73,13 +74,20 @@ public class FilesystemFileStorageServiceTest {
 
     @Test
     public void testWrite() {
+        String os = System.getProperty("os.name", "unknown")
+            .toLowerCase(Locale.ROOT);
         FileEntry fileEntry = fileStorageService.storeFileContent(
             "data", "fileName.txt", new ByteArrayInputStream(TEST_STRING.getBytes(StandardCharsets.UTF_8)));
 
         String path = fileEntry.getUrl();
 
-        Assertions.assertThat(path)
-            .startsWith("file:/tmp/test/bytechef/files/");
+        if (os.startsWith("windows")) {
+            Assertions.assertThat(path)
+                .startsWith("file:\\tmp\\test\\bytechef\\files\\");
+        } else {
+            Assertions.assertThat(path)
+                .startsWith("file:/tmp/test/bytechef/files/");
+        }
 
         String url = fileEntry.getUrl();
 

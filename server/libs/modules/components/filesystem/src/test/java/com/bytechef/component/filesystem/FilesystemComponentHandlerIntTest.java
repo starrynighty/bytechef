@@ -28,6 +28,7 @@ import com.bytechef.platform.file.storage.FilesFileStorage;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Locale;
 import java.util.Map;
 import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class FilesystemComponentHandlerIntTest {
 
     private static final Base64.Encoder ENCODER = Base64.getEncoder();
+    private static final String os = System.getProperty("os.name", "unknown")
+        .toLowerCase(Locale.ROOT);
 
     @Autowired
     private FilesFileStorage filesFileStorage;
@@ -89,7 +92,11 @@ public class FilesystemComponentHandlerIntTest {
 
         Map<String, ?> outputs = taskFileStorage.readJobOutputs(job.getOutputs());
 
-        assertThat((Map<?, ?>) outputs.get("writeLocalFile")).hasFieldOrPropertyWithValue("bytes", 5);
+        if (os.startsWith("windows")) {
+            assertThat((Map<?, ?>) outputs.get("writeLocalFile")).hasFieldOrPropertyWithValue("bytes", 6);
+        } else {
+            assertThat((Map<?, ?>) outputs.get("writeLocalFile")).hasFieldOrPropertyWithValue("bytes", 5);
+        }
     }
 
     private File getFile() {

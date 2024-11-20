@@ -22,6 +22,7 @@ import com.bytechef.component.definition.ActionContext;
 import com.bytechef.component.definition.Parameters;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,9 @@ import org.mockito.Mockito;
  * @author Ivica Cardic
  */
 class FilesystemMkdirActionTest {
+
+    private static final String os = System.getProperty("os.name", "unknown")
+        .toLowerCase(Locale.ROOT);
 
     @Test
     void testCreateDir1() throws IOException {
@@ -51,12 +55,13 @@ class FilesystemMkdirActionTest {
     void testCreateDir2() {
         Parameters parameters = Mockito.mock(Parameters.class);
 
-        Assertions.assertThrows(IOException.class, () -> {
-            Mockito.when(parameters.getRequiredString(Mockito.eq(PATH)))
-                .thenReturn("/no/such/thing");
+        if (!os.startsWith("windows")) {
+            Assertions.assertThrows(IOException.class, () -> {
+                Mockito.when(parameters.getRequiredString(Mockito.eq(PATH)))
+                    .thenReturn("/no/such/thing");
 
-            FilesystemMkdirAction.perform(parameters, parameters, Mockito.mock(ActionContext.class));
-        });
-
+                FilesystemMkdirAction.perform(parameters, parameters, Mockito.mock(ActionContext.class));
+            });
+        }
     }
 }

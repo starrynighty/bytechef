@@ -25,6 +25,7 @@ import com.bytechef.component.filesystem.FilesystemComponentHandlerTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
@@ -35,6 +36,8 @@ import org.mockito.Mockito;
  * @author Ivica Cardic
  */
 class FilesystemLsActionTest {
+    private static final String os = System.getProperty("os.name", "unknown")
+        .toLowerCase(Locale.ROOT);
 
     @Test
     void testLs1() throws IOException {
@@ -69,11 +72,19 @@ class FilesystemLsActionTest {
         List<FilesystemLsAction.FileInfo> files = FilesystemLsAction.perform(
             parameters, parameters, Mockito.mock(ActionContext.class));
 
-        Assertions.assertEquals(
-            Set.of("sub1/C.txt", "B.txt", "A.txt"),
-            files.stream()
-                .map(FilesystemLsAction.FileInfo::getRelativePath)
-                .collect(Collectors.toSet()));
+        if (os.startsWith("windows")) {
+            Assertions.assertEquals(
+                Set.of("sub1\\C.txt", "B.txt", "A.txt"),
+                files.stream()
+                    .map(FilesystemLsAction.FileInfo::getRelativePath)
+                    .collect(Collectors.toSet()));
+        } else {
+            Assertions.assertEquals(
+                Set.of("sub1/C.txt", "B.txt", "A.txt"),
+                files.stream()
+                    .map(FilesystemLsAction.FileInfo::getRelativePath)
+                    .collect(Collectors.toSet()));
+        }
     }
 
     @Test

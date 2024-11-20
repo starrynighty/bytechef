@@ -24,6 +24,7 @@ import com.bytechef.component.bash.BashComponentHandlerTest;
 import com.bytechef.component.definition.ActionContext;
 import com.bytechef.component.definition.Parameters;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,19 +38,23 @@ public class BashExecuteActionTest {
 
     @Test
     public void testPerform() throws IOException, InterruptedException, TimeoutException {
-        String script = "ls -l " + BashComponentHandlerTest.class
-            .getClassLoader()
-            .getResource("dependencies/bash/test.txt")
-            .getFile();
+        String os = System.getProperty("os.name", "unknown")
+            .toLowerCase(Locale.ROOT);
+        if (!os.startsWith("windows")) {
+            String script = "ls -l " + BashComponentHandlerTest.class
+                .getClassLoader()
+                .getResource("dependencies/bash/test.txt")
+                .getFile();
 
-        Parameters parameters = Mockito.mock(Parameters.class);
+            Parameters parameters = Mockito.mock(Parameters.class);
 
-        Mockito.when(parameters.getRequiredString(Mockito.eq(SCRIPT)))
-            .thenReturn(script);
+            Mockito.when(parameters.getRequiredString(Mockito.eq(SCRIPT)))
+                .thenReturn(script);
 
-        String result = BashExecuteAction.perform(
-            parameters, parameters, Mockito.mock(ActionContext.class));
+            String result = BashExecuteAction.perform(
+                parameters, parameters, Mockito.mock(ActionContext.class));
 
-        Assertions.assertTrue(result.contains("build/resources/test/dependencies/bash/test.txt"));
+            Assertions.assertTrue(result.contains("build/resources/test/dependencies/bash/test.txt"));
+        }
     }
 }

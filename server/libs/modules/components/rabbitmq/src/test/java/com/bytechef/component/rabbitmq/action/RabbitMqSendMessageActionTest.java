@@ -16,7 +16,10 @@
 
 package com.bytechef.component.rabbitmq.action;
 
-import static com.bytechef.component.rabbitmq.constant.RabbitMqConstants.*;
+import static com.bytechef.component.rabbitmq.constant.RabbitMqConstants.HOSTNAME;
+import static com.bytechef.component.rabbitmq.constant.RabbitMqConstants.PASSWORD;
+import static com.bytechef.component.rabbitmq.constant.RabbitMqConstants.PORT;
+import static com.bytechef.component.rabbitmq.constant.RabbitMqConstants.USERNAME;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

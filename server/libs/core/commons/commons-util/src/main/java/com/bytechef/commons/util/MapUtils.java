@@ -112,6 +112,9 @@ public class MapUtils {
         if (value == null) {
             return null;
         }
+        if (returnType.isInstance(value)){
+            return returnType.cast(value);
+        }
 
         return convert(value, returnType);
     }

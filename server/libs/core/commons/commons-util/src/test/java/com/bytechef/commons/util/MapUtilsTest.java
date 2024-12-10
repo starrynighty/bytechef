@@ -59,4 +59,23 @@ public class MapUtilsTest {
 
         assertEquals("{key1=10, key2=true, key3=[10, 20, 30]}", result);
     }
+
+    @Test
+    public void testGetInteger() {
+        Map<String, Integer> map = Map.of("height", 100, "width", 200, "depth", 1230);
+
+        int height = 0;
+        int width = 0;
+        int depth = 0;
+        // one million iterations added to test performance after adding a type check
+        for(int i = 0; i<1000000; i++){
+            height = MapUtils.getRequiredInteger(map, "height");
+            width = MapUtils.getRequiredInteger(map, "width");
+            depth = MapUtils.getRequiredInteger(map, "depth");
+        }
+
+        assertEquals(100, height);
+        assertEquals(200, width);
+        assertEquals(1230, depth);
+    }
 }
